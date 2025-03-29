@@ -8,7 +8,7 @@
 
 #include <stdint.h>
 #include <stdlib.h>
-#include <math.h>
+#include <stddef.h>
 
 #define SHA256_BLOCK_SIZE 32
 

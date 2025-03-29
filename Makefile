@@ -21,6 +21,7 @@ OBJ = $(SRC:.c=.o)
 TEST = test/test.c
 CC = cc
 CFLAGS = -g #-Wall -Wextra -Werror
+CFLAGS_RELEASE = -Wall -Wextra -Werror
 
 all: $(NAME)
 	mkdir -p "shared"
