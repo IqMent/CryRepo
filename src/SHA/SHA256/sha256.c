@@ -4,8 +4,36 @@
 // Date: 25/03/2025
 
 #include "../../../include/sha256.h"
+//Documentation: https://csrc.nist.gov/files/pubs/fips/180-2/final/docs/fips180-2.pdf
+
+#define ROT_L(x, n) (x << n) | (x >> (32 - n))
+/*
+ * The rotate left (circular left shift) operation, ROTL n(x), where x is a w-bit word and n
+ * is an integer with 0 £ n < w, is defined by
+ * ROTL n(x) = (x << n) v (x >> w - n).
+ * Thus, ROTL n(x) is equivalent to a circular shift (rotation)
+ * of x by n positions to the left.
+*/
+#define ROT_R(a, b) (x >> n) | (x << (32 - n))
+/*
+ * The rotate right (circular right shift) operation ROTR n(x), where x is a w-bit word
+ * and n is an integer with 0 <= n < w, is defined by
+ * ROTRn(x) = (x >> n) v (x << w - n).
+ * Thus, ROTR n(x) is equivalent to a circular shift (rotation)
+ * of x by n positions to the right
+*/
+#define SHR(x, n) (x >> n)
+/*
+ * The right shift operation SHR n(x), where x is a w-bit word and n is an integer with 0
+ * <= n < w, is defined by SHR n(x) = x >> n.
+*/
 
 typedef unsigned char byte;
+
+static const unsigned int SHA256_INITIAL_HASH[8] = {
+        0x6a09e667, 0xbb67ae85, 0x3c6ef372, 0xa54ff53a,
+        0x510e527f, 0x9b05688c, 0x1f83d9ab, 0x5be0cd19
+};
 
 static const unsigned int SHA256_CONSTANT[64] = {
         0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5,
@@ -26,7 +54,7 @@ static const unsigned int SHA256_CONSTANT[64] = {
         0x90befffa, 0xa4506ceb, 0xbef9a3f7, 0xc67178f2
 };
 
-
+void sha256_transform()
 
 int sha256_init(SHA256_CTX **ctx){
     if (ctx == NULL)

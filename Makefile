@@ -1,11 +1,26 @@
+
+OS := $(shell uname)
+
+ifeq($(OS), Linux)
+	echo "Linux"
+	PATH := $(PATH):/usr/local/lib/
+endif
+
+ifeq($(OS), Darwin)
+	echo "Mac"
+endif
+
+ifeq($(OS), Windows_NT)
+	echo "Windows"
+endif
+
 NAME = CryRepo.a
 HEADERS = $(wildcard include/*.h)
 SRC = src/SHA/SHA256/sha256.c
-#TEST =
 OBJ = $(SRC:.c=.o)
+TEST = test/test.c
 CC = cc
 CFLAGS = -g #-Wall -Wextra -Werror
-
 
 all: $(NAME)
 	mkdir -p "shared"
