@@ -1,18 +1,18 @@
 
 OS := $(shell uname)
 
-ifeq($(OS), Linux)
-	echo "Linux"
-	PATH := $(PATH):/usr/local/lib/
-endif
+# ifeq($(OS), Linux)
+# 	echo "Linux"
+# 	PATH := $(PATH):/usr/local/lib/
+# endif
 
-ifeq($(OS), Darwin)
-	echo "Mac"
-endif
+# ifeq($(OS), Darwin)
+# 	echo "Mac"
+# endif
 
-ifeq($(OS), Windows_NT)
-	echo "Windows"
-endif
+# ifeq($(OS), Windows_NT)
+# 	echo "Windows"
+# endif
 
 NAME = CryRepo.a
 HEADERS = $(wildcard include/*.h)

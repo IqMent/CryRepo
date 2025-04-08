@@ -43,6 +43,7 @@
 
 typedef unsigned char   byte;
 typedef unsigned int    word; // 4 bytes
+
 // Constants
 static const unsigned int SHA256_INITIAL_HASH_CONSTANT[8] = {
         0x6a09e667, 0xbb67ae85, 0x3c6ef372, 0xa54ff53a,
@@ -87,19 +88,35 @@ Appendix B gives several detailed examples of SHA-256.
 // Then we have to add 0 bits until the length of the message is 448 bits
 // Then we have to add the length of the message as a 64-bit integer
 
-/******************Functions Implementation******************/
-void    message_schedule
+#define ONEBIT 0x80
+#define SIZELEN 0x40
 
+static const unsigned int paddings[64] = {
+		ONEBIT, 0, 0 ,0 ,0 , 0, 0, 0,
+		0, 0, 0, 0, 0, 0, 0, 0,
+		0, 0, 0, 0, 0, 0, 0, 0,
+		0, 0, 0, 0, 0, 0, 0, 0,
+		0, 0, 0, 0, 0, 0, 0, 0,
+		0, 0, 0, 0, 0, 0, 0, 0,
+		0, 0, 0, 0, 0, 0, 0, 0,
+		0, 0, 0, 0, 0, 0, 0, 0
+};
+
+/******************Functions Implementation******************/
+static void sha256_preprocessing(SHA256_CTX *ctx, unsigned char *data)
+{
+
+}	
 void    sha256_transform(SHA256_CTX *ctx, const byte data[]){
     word a, b, c, d, e, f, g, h;
 
 }
 
-int sha256_init(SHA256_CTX **ctx){ // 1 - success, 0 - fail
+int sha256_init(SHA256_CTX *ctx){ // 1 - success, -1 - fail
     if (ctx == NULL)
-        return (0);
-    if (!*ctx)
-        return (0);
+        return (-1);
+    if (!ctx)
+        return (-1);
     ctx->datalen = 0;
     ctx->bitlen = 0;
     ctx->state[0] = SHA256_INITIAL_HASH_CONSTANT[0];
@@ -113,8 +130,7 @@ int sha256_init(SHA256_CTX **ctx){ // 1 - success, 0 - fail
     return (1);
 }
 
-int sha256_update(SHA256_CTX *ctx, const byte data[], uint32_t len){ // 1 - success, 0 - fail
-
+int sha256_update(SHA256_CTX *ctx, const unsigned char *data, const size_t len){ // 1 - success, 0 - fail
     return (1);
 }
 
