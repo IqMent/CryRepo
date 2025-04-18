@@ -4,6 +4,8 @@
 // Date: 25/03/2025
 
 #include "../../../include/sha256.h"
+#include <stdlib.h>
+#include <string.h>
 //Documentation: https://csrc.nist.gov/files/pubs/fips/180-2/final/docs/fips180-2.pdf
 
 #define ROT_L(x, n) ((x << n) | (x >> (32 - n)))
@@ -103,20 +105,50 @@ static const unsigned int paddings[64] = {
 };
 
 /******************Functions Implementation******************/
-static void sha256_preprocessing(SHA256_CTX *ctx, unsigned char *data)
-{
-
-}	
-void    sha256_transform(SHA256_CTX *ctx, const byte data[]){
-    word a, b, c, d, e, f, g, h;
-
+static void sha256_transform(SHA256_CTX *ctx, const byte data[]){
+    word a, b, c, d, e, f, g, h, i, j;
+    word t1, t2;
+    word m[64];
+    for (i = 0, j = 0; i < 16; i++, j+=4)
+        m[i] = (data[j] << 24) | (data[j + 1] << 16) | (data[j + 2] << 8) | (data[j + 3]);
+    for ( ; i < 64; i++){
+        m[i] = sigma1(m[i - 2]) + m[i - 7] + sigma0(m[i - 15]) + m[i - 16];
+    }
+    a = ctx->state[0];
+    b = ctx->state[1];
+    c = ctx->state[2];
+    d = ctx->state[3];
+    e = ctx->state[4];
+    f = ctx->state[5];
+    g = ctx->state[6];
+    h = ctx->state[7];
+    for (size_t i = 0; i < 64; i++){
+        t1 = h + SIGMA1(e) + CH(e, f, g) + SHA256_CONSTANT[i] + m[i];
+        t2 = SIGMA0(a) + MAJ(a, b, c);
+        h = g;
+        g = f;
+        f = e;
+        e = d + t1;
+        d = c;
+        c = b;
+        b = a;
+        a = t1 + t2;
+    }
+    ctx->state[0] += a;
+    ctx->state[1] += b;
+    ctx->state[2] += c;
+    ctx->state[3] += d;
+    ctx->state[4] += e;
+    ctx->state[5] += f;
+    ctx->state[6] += g;
+    ctx->state[7] += h;
 }
 
 int sha256_init(SHA256_CTX *ctx){ // 1 - success, -1 - fail
     if (ctx == NULL)
-        return (-1);
+        return (0);
     if (!ctx)
-        return (-1);
+        return (0);
     ctx->datalen = 0;
     ctx->bitlen = 0;
     ctx->state[0] = SHA256_INITIAL_HASH_CONSTANT[0];
@@ -131,9 +163,58 @@ int sha256_init(SHA256_CTX *ctx){ // 1 - success, -1 - fail
 }
 
 int sha256_update(SHA256_CTX *ctx, const unsigned char *data, const size_t len){ // 1 - success, 0 - fail
+    if (!ctx || !data || len <= 0)
+        return (0);
+    for (size_t i = 0; i < len; i++){
+        ctx->data[ctx->datalen] = data[i];
+        ctx->datalen++;
+        if (ctx->datalen == 64){
+            sha256_transform(ctx, ctx->data);
+            ctx->bitlen += 512;
+            ctx->datalen = 0;
+        }
+    }
     return (1);
 }
 
 int sha256_final(SHA256_CTX *ctx, byte hash[]){ // 1 - success, 0 - fail
+    if (!ctx || !hash)
+        return (0);
+    word i;
+    i = ctx->datalen;
+    if (ctx->datalen < 56){
+        ctx->data[i++] = 0x80;
+        while (i < 56)
+            ctx->data[i++] = 0x00;
+    }
+    else{
+        ctx->data[i++] = 0x80;
+        while (i < 64)
+            ctx->data[i++] = 0x00;
+        sha256_transform(ctx, ctx->data);
+        memset(ctx->data, 0, 56);
+    }
+    ctx->bitlen += ctx->datalen * 8;
+    ctx->data[63] = ctx->bitlen;
+    ctx->data[62] = ctx->bitlen >> 8;
+    ctx->data[61] = ctx->bitlen >> 16;
+    ctx->data[60] = ctx->bitlen >> 24;
+    ctx->data[59] = ctx->bitlen >> 32;
+    ctx->data[58] = ctx->bitlen >> 40;
+    ctx->data[57] = ctx->bitlen >> 48;
+    ctx->data[56] = ctx->bitlen >> 56;
+    sha256_transform(ctx, ctx->data);
+    for (i = 0; i < 4; ++i) {
+		hash[i]      = (ctx->state[0] >> (24 - i * 8)) & 0x000000ff;
+		hash[i + 4]  = (ctx->state[1] >> (24 - i * 8)) & 0x000000ff;
+		hash[i + 8]  = (ctx->state[2] >> (24 - i * 8)) & 0x000000ff;
+		hash[i + 12] = (ctx->state[3] >> (24 - i * 8)) & 0x000000ff;
+		hash[i + 16] = (ctx->state[4] >> (24 - i * 8)) & 0x000000ff;
+		hash[i + 20] = (ctx->state[5] >> (24 - i * 8)) & 0x000000ff;
+		hash[i + 24] = (ctx->state[6] >> (24 - i * 8)) & 0x000000ff;
+		hash[i + 28] = (ctx->state[7] >> (24 - i * 8)) & 0x000000ff;
+	}
+    ctx->datalen = 0;
+    ctx->bitlen = 0;
     return (1);
 }

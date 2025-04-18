@@ -17,7 +17,7 @@ typedef struct {
     uint32_t datalen;
     uint64_t bitlen;
     uint32_t state[8];
-} SHA256_CTX;
+}   SHA256_CTX;
 
 int sha256_init(SHA256_CTX *ctx);
 int sha256_update(SHA256_CTX *ctx, const unsigned char *data, const size_t len);
