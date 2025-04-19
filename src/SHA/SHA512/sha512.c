@@ -19,8 +19,30 @@
  * £ n < w, is defined by SHR n(x) = x >> n.
 */
 #define SHR(x, n) (x >> n)
+/*
+ * SHA512 - Function's Definitions
+*/
 
+#define CH(x, y, z) ((x & y) ^ (~x & z))
+#define MAJ(x, y, z) ((x & y) ^ (x & z) ^ (y & z))
 
+//Big sigma function's
+#define SIGMA0(x) (ROT_R(x, 28) ^ ROT_R(x, 34) ^ ROT_R(x, 39))
+#define SIGMA1(x) (ROT_R(x, 14) ^ ROT_R(x, 18) ^ ROT_R(x, 41))
+//Small sigma function's
+#define sigma0(x) (ROT_R(x, 1) ^ ROT_R(x, 8) ^ SHR(x, 7))
+#define sigma1(x) (ROT_R(x, 19) ^ ROT_R(x, 61) ^ SHR(x, 6))
+
+typedef unsigned char   byte;
+typedef unsigned int    word; // 4 bytes
+
+//Constants
+static const unsigned long long SHA512_INITIAL_HASH_CONSTANTS[8] = {
+        0x6a09e667f3bcc908,0xbb67ae8584caa73b,
+        0x3c6ef372fe94f82b,0xa54ff53a5f1d36f1,
+        0x510e527fade682d1,0x9b05688c2b3e6c1f,
+        0x1f83d9abfb41bd6b,0x5be0cd19137e2179
+};
 
 static const unsigned long long SHA512_CONSTANTS[80] = {
         0x428a2f98d728ae22, 0x7137449123ef65cd, 0xb5c0fbcfec4d3b2f, 0xe9b5dba58189dbbc,
@@ -45,12 +67,11 @@ static const unsigned long long SHA512_CONSTANTS[80] = {
         0x4cc5d4becb3e42b6, 0x597f299cfc657e2a, 0x5fcb6fab3ad6faec, 0x6c44198c4a475817
 };
 
-static const unsigned long long SHA512_INITIAL_HASH_CONSTANTS[8] = {
-        0x6a09e667f3bcc908,0xbb67ae8584caa73b,
-        0x3c6ef372fe94f82b,0xa54ff53a5f1d36f1,
-        0x510e527fade682d1,0x9b05688c2b3e6c1f,
-        0x1f83d9abfb41bd6b,0x5be0cd19137e2179
-};
+static void sha512_transform(SHA512_CTX *ctx, const unsigned char data[])
+{
+
+    return ;
+}
 
 int sha512_init(SHA512_CTX *ctx){ // 1 - success, 0 - fail
     if (!ctx)
@@ -65,7 +86,6 @@ int sha512_init(SHA512_CTX *ctx){ // 1 - success, 0 - fail
     ctx->state[5] = SHA512_INITIAL_HASH_CONSTANTS[5];
     ctx->state[6] = SHA512_INITIAL_HASH_CONSTANTS[6];
     ctx->state[7] = SHA512_INITIAL_HASH_CONSTANTS[7];
-
     return (1);
 }
 
@@ -73,7 +93,17 @@ int sha512_update(SHA512_CTX *ctx, const unsigned char *data, const size_t len)
 {
     if (!ctx || !data || len <= 0)
         return (0);
-
+    word i;
+    i = ctx->datalen;
+    for (; i < len; i++){
+        ctx->data[ctx->datalen] = data[i];
+        ctx->datalen++;
+        if (ctx->datalen == 128){
+            //TODO sha512_transform(ctx, ctx->data);
+            ctx->bitlen += 1024;
+            ctx->datalen = 0;
+        }
+    }
     return (1);
 }
 
