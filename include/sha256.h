@@ -10,7 +10,7 @@
 #include <stdlib.h>
 #include <stddef.h>
 
-#define SHA256_BLOCK_SIZE 32
+#define SHA256_HASH_BSIZE 32
 
 typedef struct {
     uint8_t data[64];

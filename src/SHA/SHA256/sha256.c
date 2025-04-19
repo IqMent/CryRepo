@@ -4,7 +4,6 @@
 // Date: 25/03/2025
 
 #include "../../../include/sha256.h"
-#include <stdlib.h>
 #include <string.h>
 //Documentation: https://csrc.nist.gov/files/pubs/fips/180-2/final/docs/fips180-2.pdf
 
@@ -91,7 +90,6 @@ Appendix B gives several detailed examples of SHA-256.
 // Then we have to add the length of the message as a 64-bit integer
 
 #define ONEBIT 0x80
-#define SIZELEN 0x40
 
 static const unsigned int paddings[64] = {
 		ONEBIT, 0, 0 ,0 ,0 , 0, 0, 0,
