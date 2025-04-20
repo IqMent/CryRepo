@@ -22,6 +22,6 @@ typedef struct {
 
 int sha512_init(SHA512_CTX *ctx);
 int sha512_update(SHA512_CTX *ctx, const unsigned char *data, const size_t len);
-int sha512_final();
+int sha512_final(SHA512_CTX *ctx, unsigned char hash[]);
 
 #endif //SHA512_H

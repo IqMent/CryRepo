@@ -4,6 +4,7 @@
 // Date: 19/04/2025
 
 #include "../../../include/sha512.h"
+#include <string.h>
 //Documentation: https://csrc.nist.gov/files/pubs/fips/180-2/final/docs/fips180-2.pdf
 
 /*
@@ -74,11 +75,42 @@ static void sha512_transform(SHA512_CTX *ctx, const unsigned char data[])
     unsigned long long m[80];
     unsigned int i, j;
     for (i = 0, j = 0; i < 16; i++, j+=8){
-
+        m[i] = ((unsigned long long)data[j] << 56) | ((unsigned long long)data[j + 1] << 48) |
+                ((unsigned long long)data[j + 2] << 40) | ((unsigned long long)data[j + 3] << 32) |
+                ((unsigned long long)data[j + 4] << 24) | ((unsigned long long)data[j + 5] << 16) |
+                ((unsigned long long)data[j + 6] << 8) | (unsigned long long)data[j + 7];
     }
-    for ( ; i < 80; i++){
-
+    for ( ; i < 80; i++) {
+        m[i] = sigma1(m[i - 2]) + m[i - 7] + sigma0(m[i - 15]) + m[i - 16];
     }
+    a = ctx->state[0];
+    b = ctx->state[1];
+    c = ctx->state[2];
+    d = ctx->state[3];
+    e = ctx->state[4];
+    f = ctx->state[5];
+    g = ctx->state[6];
+    h = ctx->state[7];
+    for (i = 0; i < 80; i++){
+        t1 = h + SIGMA1(e) + CH(e, f, g) + SHA512_CONSTANTS[i] + m[i];
+        t2 = SIGMA0(a) + MAJ(a, b, c);
+        h = g;
+        g = f;
+        f = e;
+        e = d + t1;
+        d = c;
+        c = b;
+        b = a;
+        a = t1 + t2;
+    }
+    ctx->state[0] += a;
+    ctx->state[1] += b;
+    ctx->state[2] += c;
+    ctx->state[3] += d;
+    ctx->state[4] += e;
+    ctx->state[5] += f;
+    ctx->state[6] += g;
+    ctx->state[7] += h;
     return ;
 }
 
@@ -102,13 +134,13 @@ int sha512_update(SHA512_CTX *ctx, const unsigned char *data, const size_t len)
 {
     if (!ctx || !data || len <= 0)
         return (0);
-    word i;
+    unsigned long long i;
     i = ctx->datalen;
     for (; i < len; i++){
         ctx->data[ctx->datalen] = data[i];
         ctx->datalen++;
         if (ctx->datalen == 128){
-            //TODO sha512_transform(ctx, ctx->data);
+            sha512_transform(ctx, ctx->data);
             ctx->bitlen += 1024;
             ctx->datalen = 0;
         }
@@ -120,6 +152,49 @@ int sha512_final(SHA512_CTX *ctx, unsigned char hash[])
 {
     if (!ctx || !hash)
         return (0);
-
+    unsigned long long i;
+    i = ctx->datalen;
+    if (i < 112){
+        ctx->data[i++] = 0x80;
+        while (i < 112)
+            ctx->data[i++] = 0x00;
+    }
+    else{
+        ctx->data[i++] = 0x80;
+        while (i < 128)
+            ctx->data[i++] = 0x00;
+        sha512_transform(ctx, ctx->data);
+        memset(ctx->data, 0, 112);
+    }
+    ctx->bitlen += ctx->datalen * 8;
+    ctx->data[127] = ctx->bitlen;
+    ctx->data[126] = ctx->bitlen >> 8;
+    ctx->data[125] = ctx->bitlen >> 16;
+    ctx->data[124] = ctx->bitlen >> 24;
+    ctx->data[123] = ctx->bitlen >> 32;
+    ctx->data[122] = ctx->bitlen >> 40;
+    ctx->data[121] = ctx->bitlen >> 48;
+    ctx->data[120] = ctx->bitlen >> 56;
+    ctx->data[119] = ctx->bitlen >> 64;
+    ctx->data[118] = ctx->bitlen >> 72;
+    ctx->data[117] = ctx->bitlen >> 80;
+    ctx->data[116] = ctx->bitlen >> 88;
+    ctx->data[115] = ctx->bitlen >> 96;
+    ctx->data[114] = ctx->bitlen >> 104;
+    ctx->data[113] = ctx->bitlen >> 112;
+    ctx->data[112] = ctx->bitlen >> 120;
+    ctx->data[111] = ctx->bitlen >> 128;
+    sha512_transform(ctx, ctx->data);
+    for (i = 0; i < 8; i++) {
+        hash[i * 8] = (ctx->state[i] >> 56) & 0xff;
+        hash[i * 8 + 1] = (ctx->state[i] >> 48) & 0xff;
+        hash[i * 8 + 2] = (ctx->state[i] >> 40) & 0xff;
+        hash[i * 8 + 3] = (ctx->state[i] >> 32) & 0xff;
+        hash[i * 8 + 4] = (ctx->state[i] >> 24) & 0xff;
+        hash[i * 8 + 5] = (ctx->state[i] >> 16) & 0xff;
+        hash[i * 8 + 6] = (ctx->state[i] >> 8) & 0xff;
+        hash[i * 8 + 7] = (ctx->state[i]) & 0xff;
+    }
     return (1);
 }
+

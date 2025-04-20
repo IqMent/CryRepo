@@ -1,5 +1,6 @@
 NAME = sha_test
 SRC = ${HOME}/Desktop/LummaProjects/CryRepo/src/SHA/SHA256/sha256.c \
+	  ${HOME}/Desktop/LummaProjects/CryRepo/src/SHA/SHA512/sha512.c \
 	  ${HOME}/Desktop/LummaProjects/CryRepo/test/sha/sha.c
 OBJ = ${SRC:.c=.o}
 
