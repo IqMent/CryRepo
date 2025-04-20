@@ -69,7 +69,16 @@ static const unsigned long long SHA512_CONSTANTS[80] = {
 
 static void sha512_transform(SHA512_CTX *ctx, const unsigned char data[])
 {
+    unsigned long long a, b, c, d, e, f, g, h;
+    unsigned long long t1, t2;
+    unsigned long long m[80];
+    unsigned int i, j;
+    for (i = 0, j = 0; i < 16; i++, j+=8){
 
+    }
+    for ( ; i < 80; i++){
+
+    }
     return ;
 }
 

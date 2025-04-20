@@ -44,4 +44,4 @@ fclean: clean
 
 re: fclean all
 
-.PHONY: all re install clean fclean uninstall test
+.PHONY: all re install clean fclean uninstall test install-static
