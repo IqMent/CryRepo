@@ -3,7 +3,7 @@
 // Description: SHA256 implementation
 // Date: 25/03/2025
 
-#include "../../../include/sha256.h"
+#include "../../../../include/sha256.h"
 #include <string.h>
 //Documentation: https://csrc.nist.gov/files/pubs/fips/180-2/final/docs/fips180-2.pdf
 

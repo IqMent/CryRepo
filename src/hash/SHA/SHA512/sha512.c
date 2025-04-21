@@ -3,7 +3,7 @@
 // Description: SHA256 implementation
 // Date: 19/04/2025
 
-#include "../../../include/sha512.h"
+#include "../../../../include/sha512.h"
 #include <string.h>
 //Documentation: https://csrc.nist.gov/files/pubs/fips/180-2/final/docs/fips180-2.pdf
 
@@ -67,6 +67,21 @@ static const unsigned long long SHA512_CONSTANTS[80] = {
         0x28db77f523047d84, 0x32caab7b40c72493, 0x3c9ebe0a15c9bebc, 0x431d67c49c100d4c,
         0x4cc5d4becb3e42b6, 0x597f299cfc657e2a, 0x5fcb6fab3ad6faec, 0x6c44198c4a475817
 };
+
+/*
+ * Suppose the length of the message M, in bits, is l bits. Append the bit “1” to the end of the
+ *  message, followed by k zero bits, where k is the smallest non-negative solution to the equation
+ *   l + 1 + k ” 896 mod1024 . Then append the 128-bit block that is equal to the number l expressed
+ *   using a binary representation. For example, the (8-bit ASCII) message “abc ” has length
+ *   8· 3 = 24 , so the message is padded with a one bit, then 896 - (24 + 1) = 871 zero bits, and then
+ *   the message length, to become the 1024-bit padded message
+ *   871 128
+ *   678 64748
+ *   01100001 01100010 01100011 1 00…00 00…011000 .
+ *   14243 14243 14243 123
+ *   “a” “b” “c” l = 24
+ *   The length of the padded message should now be a multiple of 1024 bits.
+*/
 
 static void sha512_transform(SHA512_CTX *ctx, const unsigned char data[])
 {
@@ -197,4 +212,3 @@ int sha512_final(SHA512_CTX *ctx, unsigned char hash[])
     }
     return (1);
 }
-
