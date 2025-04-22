@@ -31,4 +31,4 @@ fclean: clean
 
 re: fclean all
 
-.PHONY: all re install clean fclean
+#.PHONY: all re install clean fclean

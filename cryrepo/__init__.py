@@ -1,0 +1,1 @@
+from .hash import sha256

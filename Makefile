@@ -1,5 +1,5 @@
 
-OS := $(shell uname)
+#OS := $(shell uname)
 
 # ifeq($(OS), Linux)
 # 	echo "Linux"
@@ -14,32 +14,39 @@ OS := $(shell uname)
 # 	echo "Windows"
 # endif
 
-NAME = CryRepo.a
+NAME_SO= CryRepo.so
 HEADERS = $(wildcard include/*.h)
-SRC = src/SHA/SHA256/sha256.c
+SRC = ${HOME}/Desktop/LummaProjects/CryRepo/src/hash/SHA/SHA256/sha256.c \
+	  ${HOME}/Desktop/LummaProjects/CryRepo/src/hash/SHA/SHA512/sha512.c \
+	  ${HOME}/Desktop/LummaProjects/CryRepo/src/hash/SHA/SHA384/sha384.c \
+INCLUDE = include
 OBJ = $(SRC:.c=.o)
-TEST = test/test.c
 CC = cc
 CFLAGS = -g #-Wall -Wextra -Werror
 CFLAGS_RELEASE = -Wall -Wextra -Werror
 
-all: $(NAME)
-	mkdir -p "shared"
-	mv $(NAME) shared
+all: $(NAME_SO)
 
-$(NAME): $(OBJ)
-	@echo "Compiling $(NAME)..."
-	ar rcs $(NAME) $(OBJ)
+$(NAME_SO): $(OBJ)
+	$(CC) -shared -o $(NAME_SO) $(OBJ)
+	#ar rcs $(NAME_SO) $(OBJ)
 
-%.o: %.c $(HEADERS)
-	$(CC) $(CFLAGS) -c $< -o $@
+%.o: %.c
+	$(CC) $(CFLAGS) -fPIC -c $< -o $@
+
+install:
+	@echo "Installing $(NAME_SO)..."
+	@mkdir -p /usr/local/include/cryrepo
+	@cp include/*.h /usr/local/include/cryrepo/
+	@cp $(NAME_SO) /usr/local/lib/
+	@echo "Done"
 
 clean:
-	@echo "Cleaning $(NAME)..."
+	@echo "Cleaning $(NAME_SO)..."
 	rm -f $(OBJ)
 
 fclean: clean
-	@echo "Full cleaning $(NAME)..."
+	@echo "Full cleaning $(NAME_SO)..."
 	rm -rf shared
 
 re: fclean all

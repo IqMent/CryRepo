@@ -91,16 +91,6 @@ Appendix B gives several detailed examples of SHA-256.
 
 #define ONEBIT 0x80
 
-static const unsigned int paddings[64] = {
-		ONEBIT, 0, 0 ,0 ,0 , 0, 0, 0,
-		0, 0, 0, 0, 0, 0, 0, 0,
-		0, 0, 0, 0, 0, 0, 0, 0,
-		0, 0, 0, 0, 0, 0, 0, 0,
-		0, 0, 0, 0, 0, 0, 0, 0,
-		0, 0, 0, 0, 0, 0, 0, 0,
-		0, 0, 0, 0, 0, 0, 0, 0,
-		0, 0, 0, 0, 0, 0, 0, 0
-};
 
 /******************Functions Implementation******************/
 static void sha256_transform(SHA256_CTX *ctx, const byte data[]){
