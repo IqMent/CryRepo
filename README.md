@@ -2,7 +2,68 @@
 #### This repository contains the implementation of various cryptographic algorithms and protocols in C.
 #### Author: iqMent
 
-### References
+# How to Install
+
+# Mac/Linux
+### 1. Clone the repository
+```bash
+git clone git@github.com:IqMent/CryRepo.git && cd CryRepo
+```
+### 2. Install (as a dynamic library)
+```bash
+make all
+sudo make install
+```
+#### it will install in `/usr/local/lib` and `/usr/local/include`
+
+### 3. Clean up
+```bash
+make clean
+```
+# Windows
+### Coming Soon
+# Uninstall
+## Mac/Linux
+```bash
+sudo make uninstall
+```
+## Windows
+### Coming Soon
+
+# Usage
+# C/C++
+## SHA-1/256/384/512
+```C/C++
+#include <stdio.h>
+#include <string.h>
+#include <cryrepo/sha1/256/384/512.h>
+int main() {
+    char *message = "Hello, World!";
+    char hash[SHA1/256/384/512_HASH_BSIZE];
+    SHA1/256/384/512_CTX ctx;
+    sha1/256/384/512_init(&ctx);
+    sha1/256/384/512_update(&ctx, message, strlen(message));
+    sha1/256/384/512_final(&ctx, hash);
+    printf("SHA-1/256/384/512: ");
+    for (int i = 0; i < SHA1/256/384/512_HASH_BSIZE; i++) {
+        printf("%02x", (unsigned char)hash[i]);
+    }
+    printf("\n");
+    return 0;
+}
+```
+
+
+# Python
+## SHA-1/256/384/512
+```Python
+from cryrepo.hash import shaXXX # XXX- replace with 1, 256, 384, or 512
+message = b"Hello, World!"
+hash = shaXXX(message)
+print("SHAXXX", hash.hex())
+```
+
+# References
 #### For SHA - family:
 - [FIPS PUB 180-2 - Secure Hash Standard](https://csrc.nist.gov/files/pubs/fips/180-2/final/docs/fips180-2.pdf)
 #### For BLAKE
