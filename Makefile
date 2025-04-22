@@ -19,7 +19,6 @@ HEADERS = $(wildcard include/*.h)
 SRC = ${HOME}/Desktop/LummaProjects/CryRepo/src/hash/SHA/SHA256/sha256.c \
 	  ${HOME}/Desktop/LummaProjects/CryRepo/src/hash/SHA/SHA512/sha512.c \
 	  ${HOME}/Desktop/LummaProjects/CryRepo/src/hash/SHA/SHA384/sha384.c \
-INCLUDE = include
 OBJ = $(SRC:.c=.o)
 CC = cc
 CFLAGS = -g #-Wall -Wextra -Werror
