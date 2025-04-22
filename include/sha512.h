@@ -7,6 +7,10 @@
 #ifndef SHA512_H
 #define SHA512_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdlib.h>
 #include <stdint.h>
 #include <stddef.h>
@@ -23,5 +27,7 @@ typedef struct {
 int sha512_init(SHA512_CTX *ctx);
 int sha512_update(SHA512_CTX *ctx, const unsigned char *data, const size_t len);
 int sha512_final(SHA512_CTX *ctx, unsigned char hash[]);
-
+#ifdef __cplusplus
+}
+#endif
 #endif //SHA512_H

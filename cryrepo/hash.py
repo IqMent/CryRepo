@@ -1,7 +1,7 @@
 import ctypes
 from ctypes import c_uint8, c_size_t, c_uint32, c_uint64, c_void_p, POINTER
 
-cryrepo_lib = ctypes.CDLL("/usr/local/lib/CryRepo.so")
+cryrepo_lib = ctypes.CDLL("/usr/local/lib/libCryRepo.so")
 
 class _SHA256_CTX(ctypes.Structure):
     _fields_ = [
@@ -45,9 +45,9 @@ def sha256(data):
 class _SHA384_CTX(ctypes.Structure):
     _fields_ = [
         ('data', ctypes.c_uint8 * 128),
-        ('datalen', c_size_t),
+        ('datalen', c_uint64),
         ('bitlen', c_uint64),
-        ('state', c_uint32 * 8)
+        ('state', c_uint64 * 8)
     ]
 
 cryrepo_lib.sha384_init.argtypes = [POINTER(_SHA384_CTX)]
@@ -63,7 +63,7 @@ def _sha384_init():
     ctx = _SHA384_CTX()
     ctx.datalen = 0
     ctx.bitlen = 0
-    ctx.state = (c_uint32 * 8)()
+    ctx.state = (c_uint64 * 8)()
     cryrepo_lib.sha384_init(ctypes.byref(ctx))
     return ctx
 def _sha384_update(ctx, data):
@@ -84,9 +84,9 @@ def sha384(data):
 class _SHA512_CTX(ctypes.Structure):
     _fields_ = [
         ('data', ctypes.c_uint8 * 128),
-        ('datalen', c_size_t),
+        ('datalen', c_uint64),
         ('bitlen', c_uint64),
-        ('state', c_uint32 * 8)
+        ('state', c_uint64 * 8)
     ]
 
 cryrepo_lib.sha512_init.argtypes = [POINTER(_SHA512_CTX)]
@@ -102,7 +102,7 @@ def _sha512_init():
     ctx = _SHA512_CTX()
     ctx.datalen = 0
     ctx.bitlen = 0
-    ctx.state = (c_uint32 * 8)()
+    ctx.state = (c_uint64 * 8)()
     cryrepo_lib.sha512_init(ctypes.byref(ctx))
     return ctx
 

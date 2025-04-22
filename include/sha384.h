@@ -5,6 +5,10 @@
 #ifndef CRYREPO_SHA384_H
 #define CRYREPO_SHA384_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdint.h>
 #include <stddef.h>
 #include <stdlib.h>
@@ -21,5 +25,7 @@ typedef struct {
 int sha384_init(SHA384_CTX *ctx);
 int sha384_update(SHA384_CTX *ctx, const unsigned char *data, const size_t len);
 int sha384_final(SHA384_CTX *ctx, unsigned char hash[]);
-
+#ifdef __cplusplus
+}
+#endif
 #endif //CRYREPO_SHA384_H
