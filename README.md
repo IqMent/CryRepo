@@ -36,16 +36,16 @@ sudo make uninstall
 ```C/C++
 #include <stdio.h>
 #include <string.h>
-#include <cryrepo/sha1/256/384/512.h>
+#include <cryrepo/shaXXX.h> // XXX - replace with 1, 256, 384, or 512
 int main() {
     char *message = "Hello, World!";
-    char hash[SHA1/256/384/512_HASH_BSIZE];
-    SHA1/256/384/512_CTX ctx;
-    sha1/256/384/512_init(&ctx);
-    sha1/256/384/512_update(&ctx, message, strlen(message));
-    sha1/256/384/512_final(&ctx, hash);
-    printf("SHA-1/256/384/512: ");
-    for (int i = 0; i < SHA1/256/384/512_HASH_BSIZE; i++) {
+    char hash[SHAXXX_HASH_BSIZE];
+    SHAXXX_CTX ctx;
+    shaXXX_init(&ctx);
+    shaXXX_update(&ctx, message, strlen(message));
+    shaXXX_final(&ctx, hash);
+    printf("SHA-XXX: ");
+    for (int i = 0; i < SHAXXX_HASH_BSIZE; i++) {
         printf("%02x", (unsigned char)hash[i]);
     }
     printf("\n");
