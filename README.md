@@ -2,6 +2,14 @@
 #### This repository contains the implementation of various cryptographic algorithms and protocols in C.
 #### Author: iqMent
 
+# CryRepo
+
+is a cryptographic primitives library designed for rapid development and prototyping of blockchain projects.
+
+It provides the necessary tools for implementing basic cryptographic functions, simplifying the creation and testing of new solutions.
+
+CryRepo is focused on ease of use and speeding up the development process, allowing for quick integration of cryptography into blockchain applications at various stages of their creation.
+
 # How to Install
 
 # Mac/Linux
