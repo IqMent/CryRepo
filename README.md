@@ -78,3 +78,5 @@ print("SHAXXX", hash.hex())
 - [BLAKE2B](https://datatracker.ietf.org/doc/html/rfc7693)
 #### FOR ECDSA
 - [ECDSA](https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.186-4.pdf)
+#### For RSA
+- [RSA](https://datatracker.ietf.org/doc/html/rfc8017)
