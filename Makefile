@@ -15,13 +15,16 @@
 # endif
 
 NAME_SO= CryRepo.so
+INCLUDE_DIR = include
 HEADERS = $(wildcard include/*.h)
 SRC = src/hash/SHA/SHA256/sha256.c \
 	  src/hash/SHA/SHA512/sha512.c \
-	  src/hash/SHA/SHA384/sha384.c
+	  src/hash/SHA/SHA384/sha384.c \
+	  src/hash/SHA/SHA1/sha1.c
 OBJ = $(SRC:.c=.o)
 CC = cc
-CFLAGS = -g #-Wall -Wextra -Werror
+CFLAGS = -I$(INCLUDE_DIR) -g -fPIC #-Wall -Wextra -Werror
+LDFLAGS = -shared
 CFLAGS_RELEASE = -Wall -Wextra -Werror
 
 all: $(NAME_SO)
@@ -30,7 +33,7 @@ $(NAME_SO): $(OBJ)
 	$(CC) -shared -o lib$(NAME_SO) $(OBJ)
 
 %.o: %.c
-	$(CC) $(CFLAGS) -fPIC -c $< -o $@
+	$(CC) $(CFLAGS) -c $< -o $@
 
 install:
 	@echo "Installing $(NAME_SO)..."
